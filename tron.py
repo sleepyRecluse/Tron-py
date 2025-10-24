@@ -83,20 +83,30 @@ def startScreen():
                 quitGame()
 
         gameDisplay.fill(BACKGROUND)
-        Button(DISPLAY_WIDTH / 4, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, "Play", loop)
+        Button(DISPLAY_WIDTH / 9, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, "Play", loop)
         Button(DISPLAY_WIDTH - DISPLAY_WIDTH / 3, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, RED, "Quit", quitGame)
         for obj in objects:
             obj.render()
         drawText(gameDisplay, "TRON", None, 160, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2)
-        
+
         pygame.display.update()
         clock.tick(15)
 
 def gameOver():
-    drawText(gameDisplay, "Game Over", None, 160, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2)
-    clock.tick(15)
-    pygame.time.wait(1000)
-    loop()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quitGame()
+
+        objects.clear()
+        
+        Button(DISPLAY_WIDTH / 9, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, "Continue", loop)
+        Button(DISPLAY_WIDTH - DISPLAY_WIDTH / 3, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, RED, "Quit", quitGame)
+        for obj in objects:
+            obj.render()
+        drawText(gameDisplay, "Game Over", None, 160, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2)
+        pygame.display.update()
+        clock.tick(15)
 
 def loop():
     x = DISPLAY_WIDTH * 0.45
