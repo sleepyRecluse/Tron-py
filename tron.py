@@ -59,10 +59,16 @@ class Button():
 
         gameDisplay.blit(self.buttonSurface, self.buttonRect)
 
-def blueBike(x, y):
-    gameDisplay.blit(blueBikeImg, (x, y))
-BIKE_WIDTH = 64
-BIKE_HEIGHT = 64
+class Bike():
+    def __init__(self, x, y, width, height, image):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.image = image
+    
+    def render(self):
+        gameDisplay.blit(self.image, (self.x, self.y))
 
 def drawText(surface, text, fontName, fontSize, color, x, y):
     font = pygame.font.SysFont(fontName, fontSize)
@@ -70,7 +76,6 @@ def drawText(surface, text, fontName, fontSize, color, x, y):
     textRect = textSurface.get_rect()
     textRect.center = ((x, y))
     surface.blit(textSurface, textRect)
-    pygame.display.update()
 
 def quitGame():
     pygame.quit()
@@ -109,11 +114,10 @@ def gameOver():
         clock.tick(15)
 
 def loop():
-    x = DISPLAY_WIDTH * 0.45
-    y = DISPLAY_HEIGHT * 0.8
+    objects.clear()
+    player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, 60, 60, blueBikeImg)
     x_change = 0
     y_change = 0
-    objects.clear()
 
     # Player death
     derezzed = False
@@ -139,14 +143,14 @@ def loop():
                 elif event.key == pygame.K_w or event.key == pygame.K_s:
                     y_change = 0
 
-        x += x_change
-        y += y_change
+        player.x += x_change
+        player.y += y_change
 
         gameDisplay.fill(BACKGROUND)
-        blueBike(x, y)
+        player.render()
 
         # Player dies if they touch the end 
-        if x > DISPLAY_WIDTH - BIKE_WIDTH or x < 0 or y > DISPLAY_HEIGHT - BIKE_HEIGHT or y < 0:
+        if player.x > DISPLAY_WIDTH - player.width or player.x < 0 or player.y > DISPLAY_HEIGHT - player.height or player.y < 0:
             gameOver()
 
         pygame.display.update()
