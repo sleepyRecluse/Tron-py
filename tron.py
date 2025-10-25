@@ -17,6 +17,9 @@ pygame.display.set_caption("TRON")
 
 clock = pygame.time.Clock()
 blueBikeImg = pygame.image.load("./images/blueBike.png")
+blueBikeFlipImg = pygame.transform.flip(blueBikeImg, False, True)
+blueBikeRightImg = pygame.image.load("./images/blueBikeHor.png")
+blueBikeLeftImg = pygame.transform.flip(blueBikeRightImg, True, False)
 
 objects = []
 
@@ -115,7 +118,7 @@ def gameOver():
 
 def loop():
     objects.clear()
-    player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, 60, 60, blueBikeImg)
+    player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, 65, 65, blueBikeImg)
     x_change = 0
     y_change = 0
 
@@ -128,14 +131,18 @@ def loop():
                 quitGame()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:     # move left
+                if event.key == pygame.K_a:             # move left
                     x_change = -5
-                elif event.key == pygame.K_d:   # move right
+                    player.image = blueBikeLeftImg
+                elif event.key == pygame.K_d:           # move right
                     x_change = 5
-                elif event.key == pygame.K_w:   # move up
+                    player.image = blueBikeRightImg
+                elif event.key == pygame.K_w:           # move up
                     y_change = -5
-                elif event.key == pygame.K_s:   # move down
+                    player.image = blueBikeImg
+                elif event.key == pygame.K_s:           # move down
                     y_change = 5
+                    player.image = blueBikeFlipImg
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a or event.key == pygame.K_d:
