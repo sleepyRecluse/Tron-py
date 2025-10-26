@@ -16,9 +16,15 @@ gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pygame.display.set_caption("TRON")
 
 clock = pygame.time.Clock()
-blueBikeImg = pygame.image.load("./images/blueBike.png")
+
+bikeSize = (40, 40)
+
+ogBikeImg = pygame.image.load("./images/blueBike.png")
+blueBikeImg = pygame.transform.scale(ogBikeImg, bikeSize)
 blueBikeFlipImg = pygame.transform.flip(blueBikeImg, False, True)
-blueBikeRightImg = pygame.image.load("./images/blueBikeHor.png")
+
+ogRightBikeImg = pygame.image.load("./images/blueBikeHor.png")
+blueBikeRightImg = pygame.transform.scale(ogRightBikeImg, bikeSize)
 blueBikeLeftImg = pygame.transform.flip(blueBikeRightImg, True, False)
 
 objects = []
@@ -63,12 +69,13 @@ class Button():
         gameDisplay.blit(self.buttonSurface, self.buttonRect)
 
 class Bike():
-    def __init__(self, x, y, width, height, image):
+    def __init__(self, x, y, width, height, image, currDir="UP"):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.image = image
+        self.currDir = currDir
     
     def render(self):
         gameDisplay.blit(self.image, (self.x, self.y))
@@ -118,12 +125,13 @@ def gameOver():
 
 def loop():
     objects.clear()
-    player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, 65, 65, blueBikeImg)
+    player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, bikeSize[0], bikeSize[1], blueBikeImg)
     x_change = 0
     y_change = 0
 
     # Player death
     derezzed = False
+    newDir = player.currDir
 
     while not derezzed:
         for event in pygame.event.get():
@@ -132,26 +140,35 @@ def loop():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:             # move left
-                    x_change = -5
+                    newDir = "LEFT"
                     player.image = blueBikeLeftImg
                 elif event.key == pygame.K_d:           # move right
-                    x_change = 5
+                    newDir = "RIGHT"
                     player.image = blueBikeRightImg
                 elif event.key == pygame.K_w:           # move up
-                    y_change = -5
+                    newDir = "UP"
                     player.image = blueBikeImg
                 elif event.key == pygame.K_s:           # move down
-                    y_change = 5
+                    newDir = "DOWN"
                     player.image = blueBikeFlipImg
+        
+        if newDir == 'UP' and player.currDir != 'DOWN':
+            player.currDir = 'UP'
+        elif newDir == 'DOWN' and player.currDir != 'UP':
+            player.currDir = 'DOWN'
+        elif newDir == 'LEFT' and player.currDir != 'RIGHT':
+            player.currDir = 'LEFT'
+        elif newDir == 'RIGHT' and player.currDir != 'LEFT':
+            player.currDir = 'RIGHT'
 
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_a or event.key == pygame.K_d:
-                    x_change = 0
-                elif event.key == pygame.K_w or event.key == pygame.K_s:
-                    y_change = 0
-
-        player.x += x_change
-        player.y += y_change
+        if player.currDir == 'UP':
+            player.y -= 5
+        elif player.currDir == 'DOWN':
+            player.y += 5
+        elif player.currDir == 'LEFT':
+            player.x -= 5
+        elif player.currDir == 'RIGHT':
+            player.x += 5
 
         gameDisplay.fill(BACKGROUND)
         player.render()
