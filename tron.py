@@ -19,14 +19,6 @@ clock = pygame.time.Clock()
 
 bikeSize = (40, 40)
 
-ogBikeImg = pygame.image.load("./images/blueBike.png")
-blueBikeImg = pygame.transform.scale(ogBikeImg, bikeSize)
-blueBikeFlipImg = pygame.transform.flip(blueBikeImg, False, True)
-
-ogRightBikeImg = pygame.image.load("./images/blueBikeHor.png")
-blueBikeRightImg = pygame.transform.scale(ogRightBikeImg, bikeSize)
-blueBikeLeftImg = pygame.transform.flip(blueBikeRightImg, True, False)
-
 objects = []
 
 buttonFont = pygame.font.SysFont(None, 40)
@@ -69,13 +61,21 @@ class Button():
         gameDisplay.blit(self.buttonSurface, self.buttonRect)
 
 class Bike():
-    def __init__(self, x, y, width, height, image, currDir="UP"):
+    def __init__(self, x, y, width, height, color, currDir="UP"):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.image = image
+        self.color = color
         self.currDir = currDir
+
+        self.upImg = pygame.transform.scale(pygame.image.load(f"./images/{self.color}Bike.png"), bikeSize)
+        self.downImg = pygame.transform.flip(self.upImg, False, True)
+
+        self.rightImg = pygame.transform.scale(pygame.image.load(f"./images/{self.color}BikeHor.png"), bikeSize)
+        self.leftImg = pygame.transform.flip(self.rightImg, True, False)
+
+        self.image = self.upImg
     
     def render(self):
         gameDisplay.blit(self.image, (self.x, self.y))
@@ -125,9 +125,7 @@ def gameOver():
 
 def loop():
     objects.clear()
-    player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, bikeSize[0], bikeSize[1], blueBikeImg)
-    x_change = 0
-    y_change = 0
+    player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, bikeSize[0], bikeSize[1], "orange")
 
     # Player death
     derezzed = False
@@ -141,16 +139,16 @@ def loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:             # move left
                     newDir = "LEFT"
-                    player.image = blueBikeLeftImg
+                    player.image = player.leftImg
                 elif event.key == pygame.K_d:           # move right
                     newDir = "RIGHT"
-                    player.image = blueBikeRightImg
+                    player.image = player.rightImg
                 elif event.key == pygame.K_w:           # move up
                     newDir = "UP"
-                    player.image = blueBikeImg
+                    player.image = player.upImg
                 elif event.key == pygame.K_s:           # move down
                     newDir = "DOWN"
-                    player.image = blueBikeFlipImg
+                    player.image = player.downImg
         
         if newDir == 'UP' and player.currDir != 'DOWN':
             player.currDir = 'UP'
