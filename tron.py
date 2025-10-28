@@ -10,7 +10,9 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0 , 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
+
+# Bike / Trail Colors
+bikeColors = {"red": (221, 34, 0), "orange": (244, 175, 45), "blue": (125, 253, 254) }
 
 gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pygame.display.set_caption("TRON")
@@ -18,6 +20,9 @@ pygame.display.set_caption("TRON")
 clock = pygame.time.Clock()
 
 bikeSize = (40, 40)
+trailWidth = 10
+trailLength = 10
+maxTrailSize = 50
 
 objects = []
 
@@ -62,6 +67,7 @@ class Button():
 
 class Bike():
     def __init__(self, x, y, width, height, color, currDir="UP"):
+        # Attributes
         self.x = x
         self.y = y
         self.width = width
@@ -69,6 +75,7 @@ class Bike():
         self.color = color
         self.currDir = currDir
 
+        # Bike Images
         self.upImg = pygame.transform.scale(pygame.image.load(f"./images/{self.color}Bike.png"), bikeSize)
         self.downImg = pygame.transform.flip(self.upImg, False, True)
 
@@ -76,9 +83,25 @@ class Bike():
         self.leftImg = pygame.transform.flip(self.rightImg, True, False)
 
         self.image = self.upImg
+
+        # Trail array for storing tuples of attributes
+        self.trailAttr = []
     
     def render(self):
+        for attr in self.trailAttr:
+            rect = pygame.Rect(attr[0], attr[1], attr[2], attr[3])
+            for key in bikeColors.keys():
+                if key == self.color:
+                    pygame.draw.rect(gameDisplay, bikeColors[key], rect)
         gameDisplay.blit(self.image, (self.x, self.y))
+
+    def createTrail(self):
+        if len(self.trailAttr) != maxTrailSize:
+            self.trailAttr.append((self.x + self.width / 3, self.y + self.height / 3, trailWidth, trailLength))
+        else:
+            self.trailAttr.pop(0)
+            
+        
 
 def drawText(surface, text, fontName, fontSize, color, x, y):
     font = pygame.font.SysFont(fontName, fontSize)
@@ -125,7 +148,7 @@ def gameOver():
 
 def loop():
     objects.clear()
-    player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, bikeSize[0], bikeSize[1], "orange")
+    player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, bikeSize[0], bikeSize[1], "blue")
 
     # Player death
     derezzed = False
@@ -161,12 +184,16 @@ def loop():
 
         if player.currDir == 'UP':
             player.y -= 5
+            player.createTrail()
         elif player.currDir == 'DOWN':
             player.y += 5
+            player.createTrail()
         elif player.currDir == 'LEFT':
             player.x -= 5
+            player.createTrail()
         elif player.currDir == 'RIGHT':
             player.x += 5
+            player.createTrail()
 
         gameDisplay.fill(BACKGROUND)
         player.render()
