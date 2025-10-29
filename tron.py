@@ -100,7 +100,6 @@ class Bike():
             self.trailAttr.append((self.x + self.width / 3, self.y + self.height / 3, trailWidth, trailLength))
         else:
             self.trailAttr.pop(0)
-            
         
 
 def drawText(surface, text, fontName, fontSize, color, x, y):
@@ -149,10 +148,13 @@ def gameOver():
 def loop():
     objects.clear()
     player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, bikeSize[0], bikeSize[1], "blue")
+    opp = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.2, bikeSize[0], bikeSize[1], "red")
 
     # Player death
     derezzed = False
-    newDir = player.currDir
+    newDir = player.currDir 
+    opp.currDir = "DOWN"
+    oppNewDir = opp.currDir
 
     while not derezzed:
         for event in pygame.event.get():
@@ -160,19 +162,32 @@ def loop():
                 quitGame()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:             # move left
+                if event.key == pygame.K_a:             # move player left
                     newDir = "LEFT"
                     player.image = player.leftImg
-                elif event.key == pygame.K_d:           # move right
+                elif event.key == pygame.K_d:           # move player right
                     newDir = "RIGHT"
                     player.image = player.rightImg
-                elif event.key == pygame.K_w:           # move up
+                elif event.key == pygame.K_w:           # move player up
                     newDir = "UP"
                     player.image = player.upImg
-                elif event.key == pygame.K_s:           # move down
+                elif event.key == pygame.K_s:           # move player down
                     newDir = "DOWN"
                     player.image = player.downImg
-        
+                elif event.key == pygame.K_LEFT:           # move opponent left
+                    oppNewDir = "LEFT"
+                    opp.image = opp.leftImg
+                elif event.key == pygame.K_RIGHT:           # move opponent right
+                    oppNewDir = "RIGHT"
+                    opp.image = opp.rightImg
+                elif event.key == pygame.K_UP:           # move opponent up
+                    oppNewDir = "UP"
+                    opp.image = opp.upImg
+                elif event.key == pygame.K_DOWN:           # move opponent down
+                    oppNewDir = "DOWN"
+                    opp.image = opp.downImg
+                
+        # Player Movement
         if newDir == 'UP' and player.currDir != 'DOWN':
             player.currDir = 'UP'
         elif newDir == 'DOWN' and player.currDir != 'UP':
@@ -194,12 +209,38 @@ def loop():
         elif player.currDir == 'RIGHT':
             player.x += 5
             player.createTrail()
+        
+        # Opponent Movement
+        if oppNewDir == 'UP' and opp.currDir != 'DOWN':
+            opp.currDir = 'UP'
+        elif oppNewDir == 'DOWN' and opp.currDir != 'UP':
+            opp.currDir = 'DOWN'
+        elif oppNewDir == 'LEFT' and opp.currDir != 'RIGHT':
+            opp.currDir = 'LEFT'
+        elif oppNewDir == 'RIGHT' and opp.currDir != 'LEFT':
+            opp.currDir = 'RIGHT'
 
-        gameDisplay.fill(BACKGROUND)
+        if opp.currDir == 'UP':
+            opp.y -= 5
+            opp.createTrail()
+        elif opp.currDir == 'DOWN':
+            opp.y += 5
+            opp.createTrail()
+        elif opp.currDir == 'LEFT':
+            opp.x -= 5
+            opp.createTrail()
+        elif opp.currDir == 'RIGHT':
+            opp.x += 5
+            opp.createTrail()
+
+        gameDisplay.fill(BACKGROUND)  
         player.render()
+        opp.render()
 
         # Player dies if they touch the end 
         if player.x > DISPLAY_WIDTH - player.width or player.x < 0 or player.y > DISPLAY_HEIGHT - player.height or player.y < 0:
+            gameOver()
+        elif opp.x > DISPLAY_WIDTH - opp.width or opp.x < 0 or opp.y > DISPLAY_HEIGHT - opp.height or opp.y < 0:
             gameOver()
 
         pygame.display.update()
