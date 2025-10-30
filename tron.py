@@ -2,10 +2,12 @@ import pygame
 
 pygame.init()
 
+# Display Dimensions
 DISPLAY_WIDTH = 800
 DISPLAY_HEIGHT = 800
 
-BACKGROUND = (20, 20 ,20)
+# Constamt Colors
+BACKGROUND = (20, 20, 20)
 WHITE = (255, 255, 255)
 BLACK = (0, 0 , 0)
 RED = (255, 0, 0)
@@ -83,16 +85,23 @@ class Bike():
         self.leftImg = pygame.transform.flip(self.rightImg, True, False)
 
         self.image = self.upImg
+        self.bikeRect = pygame.Rect(self.x, self.y, self.width, self.height)
 
         # Trail array for storing tuples of attributes
         self.trailAttr = []
+        self.trailRects = []
     
     def render(self):
+        self.trailRects.clear()
+        self.trailRects.append(self.bikeRect)
         for attr in self.trailAttr:
             rect = pygame.Rect(attr[0], attr[1], attr[2], attr[3])
+            self.trailRects.append(rect)
             for key in bikeColors.keys():
                 if key == self.color:
                     pygame.draw.rect(gameDisplay, bikeColors[key], rect)
+        self.bikeRect.x = self.x
+        self.bikeRect.y = self.y
         gameDisplay.blit(self.image, (self.x, self.y))
 
     def createTrail(self):
@@ -100,6 +109,12 @@ class Bike():
             self.trailAttr.append((self.x + self.width / 3, self.y + self.height / 3, trailWidth, trailLength))
         else:
             self.trailAttr.pop(0)
+    
+    def checkCollisions(self, oppRects):
+        if self.x > DISPLAY_WIDTH - self.width or self.x < 0 or self.y > DISPLAY_HEIGHT - self.height or self.y < 0:
+            gameOver()
+        if self.bikeRect.collidelist(oppRects) != -1:
+            gameOver()
         
 
 def drawText(surface, text, fontName, fontSize, color, x, y):
@@ -134,7 +149,6 @@ def gameOver():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quitGame()
-
         objects.clear()
         
         Button(DISPLAY_WIDTH / 9, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, "Continue", loop)
@@ -233,15 +247,14 @@ def loop():
             opp.x += 5
             opp.createTrail()
 
+        # Render game
         gameDisplay.fill(BACKGROUND)  
         player.render()
         opp.render()
 
-        # Player dies if they touch the end 
-        if player.x > DISPLAY_WIDTH - player.width or player.x < 0 or player.y > DISPLAY_HEIGHT - player.height or player.y < 0:
-            gameOver()
-        elif opp.x > DISPLAY_WIDTH - opp.width or opp.x < 0 or opp.y > DISPLAY_HEIGHT - opp.height or opp.y < 0:
-            gameOver()
+        # Check Player Collisions
+        player.checkCollisions(opp.trailRects)
+        opp.checkCollisions(player.trailRects)
 
         pygame.display.update()
         clock.tick(60)
