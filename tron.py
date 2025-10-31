@@ -85,7 +85,7 @@ class Bike():
         self.leftImg = pygame.transform.flip(self.rightImg, True, False)
 
         self.image = self.upImg
-        self.bikeRect = pygame.Rect(self.x, self.y, self.width, self.height)
+        self.bikeRect = self.image.get_rect()
 
         # Trail array for storing tuples of attributes
         self.trailAttr = []
@@ -96,17 +96,17 @@ class Bike():
         self.trailRects.append(self.bikeRect)
         for attr in self.trailAttr:
             rect = pygame.Rect(attr[0], attr[1], attr[2], attr[3])
+            rect.center = ((attr[0], attr[1]))
             self.trailRects.append(rect)
             for key in bikeColors.keys():
                 if key == self.color:
                     pygame.draw.rect(gameDisplay, bikeColors[key], rect)
-        self.bikeRect.x = self.x
-        self.bikeRect.y = self.y
-        gameDisplay.blit(self.image, (self.x, self.y))
+        self.bikeRect.center = ((self.x, self.y))
+        gameDisplay.blit(self.image, self.bikeRect)
 
     def createTrail(self):
         if len(self.trailAttr) != maxTrailSize:
-            self.trailAttr.append((self.x + self.width / 3, self.y + self.height / 3, trailWidth, trailLength))
+            self.trailAttr.append((self.x, self.y, trailWidth, trailLength))
         else:
             self.trailAttr.pop(0)
     
