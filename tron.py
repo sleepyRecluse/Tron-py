@@ -1,4 +1,6 @@
 import pygame
+from player import Player, Bike
+from component import Button
 
 pygame.init()
 
@@ -13,109 +15,16 @@ BLACK = (0, 0 , 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
-# Bike / Trail Colors
-bikeColors = {"red": (221, 34, 0), "orange": (244, 175, 45), "blue": (125, 253, 254) }
-
 gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pygame.display.set_caption("TRON")
 
 clock = pygame.time.Clock()
 
-bikeSize = (40, 40)
-trailWidth = 10
-trailLength = 10
-maxTrailSize = 50
+bikeSize = 41
+trailSize = 11
+maxTrailLength = 50
 
 objects = []
-
-buttonFont = pygame.font.SysFont(None, 40)
-
-class Button():
-    def __init__(self, x, y, width, height, color, activeColor, text="Button", onClick=None):
-        # Attributes
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.color = color
-        self.activeColor = activeColor
-        self.text = text
-        self.onClick = onClick
-        self.clicked = False
-
-        # Define button and text surfaces
-        self.buttonSurface = pygame.Surface((self.width, self.height))
-        self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.textSurface = buttonFont.render(self.text, True, BLACK)
-
-        # Appends self to object array for rendering
-        objects.append(self)
-        
-    def render(self):
-        mousePos = pygame.mouse.get_pos()
-        self.buttonSurface.fill(self.color)
-        if self.buttonRect.collidepoint(mousePos):
-            self.buttonSurface.fill(self.activeColor)
-            if pygame.mouse.get_pressed()[0] and self.onClick != None:
-                self.onClick()
-
-        # Prepares text to be rendered in the center of the button surface
-        self.buttonSurface.blit(self.textSurface, [
-            self.buttonRect.width / 2 - self.textSurface.get_rect().width / 2,
-            self.buttonRect.height / 2 - self.textSurface.get_rect().height / 2
-        ])
-
-        gameDisplay.blit(self.buttonSurface, self.buttonRect)
-
-class Bike():
-    def __init__(self, x, y, width, height, color, currDir="UP"):
-        # Attributes
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.color = color
-        self.currDir = currDir
-
-        # Bike Images
-        self.upImg = pygame.transform.scale(pygame.image.load(f"./images/{self.color}Bike.png"), bikeSize)
-        self.downImg = pygame.transform.flip(self.upImg, False, True)
-
-        self.rightImg = pygame.transform.scale(pygame.image.load(f"./images/{self.color}BikeHor.png"), bikeSize)
-        self.leftImg = pygame.transform.flip(self.rightImg, True, False)
-
-        self.image = self.upImg
-        self.bikeRect = self.image.get_rect()
-
-        # Trail array for storing tuples of attributes
-        self.trailAttr = []
-        self.trailRects = []
-    
-    def render(self):
-        self.trailRects.clear()
-        self.trailRects.append(self.bikeRect)
-        for attr in self.trailAttr:
-            rect = pygame.Rect(attr[0], attr[1], attr[2], attr[3])
-            rect.center = ((attr[0], attr[1]))
-            self.trailRects.append(rect)
-            for key in bikeColors.keys():
-                if key == self.color:
-                    pygame.draw.rect(gameDisplay, bikeColors[key], rect)
-        self.bikeRect.center = ((self.x, self.y))
-        gameDisplay.blit(self.image, self.bikeRect)
-
-    def createTrail(self):
-        if len(self.trailAttr) != maxTrailSize:
-            self.trailAttr.append((self.x, self.y, trailWidth, trailLength))
-        else:
-            self.trailAttr.pop(0)
-    
-    def checkCollisions(self, oppRects):
-        if self.x > DISPLAY_WIDTH - self.width or self.x < 0 or self.y > DISPLAY_HEIGHT - self.height or self.y < 0:
-            gameOver()
-        if self.bikeRect.collidelist(oppRects) != -1:
-            gameOver()
-        
 
 def drawText(surface, text, fontName, fontSize, color, x, y):
     font = pygame.font.SysFont(fontName, fontSize)
@@ -135,10 +44,14 @@ def startScreen():
                 quitGame()
 
         gameDisplay.fill(BACKGROUND)
-        Button(DISPLAY_WIDTH / 9, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, "Play", loop)
-        Button(DISPLAY_WIDTH - DISPLAY_WIDTH / 3, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, RED, "Quit", quitGame)
+        playButton = Button(DISPLAY_WIDTH / 9, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, BLACK, "Play", loop)
+        quitButton = Button(DISPLAY_WIDTH - DISPLAY_WIDTH / 3, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, RED, BLACK, "Quit", quitGame)
+
+        objects.append(playButton)
+        objects.append(quitButton)
         for obj in objects:
-            obj.render()
+            obj.render(gameDisplay)
+
         drawText(gameDisplay, "TRON", None, 160, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2)
 
         pygame.display.update()
@@ -151,24 +64,31 @@ def gameOver():
                 quitGame()
         objects.clear()
         
-        Button(DISPLAY_WIDTH / 9, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, "Continue", loop)
-        Button(DISPLAY_WIDTH - DISPLAY_WIDTH / 3, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, RED, "Quit", quitGame)
+        continueButton = Button(DISPLAY_WIDTH / 9, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, BLACK, "Continue", loop)
+        objects.append(continueButton)
+
+        quitButton = Button(DISPLAY_WIDTH - DISPLAY_WIDTH / 3, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, RED, BLACK, "Quit", quitGame)
+        objects.append(quitButton)
+
         for obj in objects:
-            obj.render()
+            obj.render(gameDisplay)
+
         drawText(gameDisplay, "Game Over", None, 160, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2)
         pygame.display.update()
         clock.tick(15)
 
 def loop():
     objects.clear()
-    player = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, bikeSize[0], bikeSize[1], "blue")
-    opp = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.2, bikeSize[0], bikeSize[1], "red")
+    playerBike = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8, bikeSize, "blue")
+    oppBike = Bike(DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.2, bikeSize, "red")
+    player = Player(playerBike, DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.8 , "blue", trailSize, maxTrailLength)
+    opp = Player(oppBike, DISPLAY_WIDTH * 0.45, DISPLAY_HEIGHT * 0.2, "red", trailSize, maxTrailLength)
 
     # Player death
     derezzed = False
-    newDir = player.currDir 
-    opp.currDir = "DOWN"
-    oppNewDir = opp.currDir
+    newDir = playerBike.currDir 
+    oppBike.currDir = "DOWN"
+    oppNewDir = oppBike.currDir
 
     while not derezzed:
         for event in pygame.event.get():
@@ -176,86 +96,82 @@ def loop():
                 quitGame()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:             # move player left
+                if event.key == pygame.K_a:                 # move player left
                     newDir = "LEFT"
-                    player.image = player.leftImg
-                elif event.key == pygame.K_d:           # move player right
+                    playerBike.image = playerBike.leftImg
+                elif event.key == pygame.K_d:               # move player right
                     newDir = "RIGHT"
-                    player.image = player.rightImg
-                elif event.key == pygame.K_w:           # move player up
+                    playerBike.image = playerBike.rightImg
+                elif event.key == pygame.K_w:               # move player up
                     newDir = "UP"
-                    player.image = player.upImg
-                elif event.key == pygame.K_s:           # move player down
+                    playerBike.image = playerBike.upImg
+                elif event.key == pygame.K_s:               # move player down
                     newDir = "DOWN"
-                    player.image = player.downImg
-                elif event.key == pygame.K_LEFT:           # move opponent left
+                    playerBike.image = playerBike.downImg
+                elif event.key == pygame.K_LEFT:            # move opponent left
                     oppNewDir = "LEFT"
-                    opp.image = opp.leftImg
+                    oppBike.image = oppBike.leftImg
                 elif event.key == pygame.K_RIGHT:           # move opponent right
                     oppNewDir = "RIGHT"
-                    opp.image = opp.rightImg
-                elif event.key == pygame.K_UP:           # move opponent up
+                    oppBike.image = oppBike.rightImg
+                elif event.key == pygame.K_UP:              # move opponent up
                     oppNewDir = "UP"
-                    opp.image = opp.upImg
-                elif event.key == pygame.K_DOWN:           # move opponent down
+                    oppBike.image = oppBike.upImg
+                elif event.key == pygame.K_DOWN:            # move opponent down
                     oppNewDir = "DOWN"
-                    opp.image = opp.downImg
+                    oppBike.image = oppBike.downImg
                 
         # Player Movement
-        if newDir == 'UP' and player.currDir != 'DOWN':
-            player.currDir = 'UP'
-        elif newDir == 'DOWN' and player.currDir != 'UP':
-            player.currDir = 'DOWN'
-        elif newDir == 'LEFT' and player.currDir != 'RIGHT':
-            player.currDir = 'LEFT'
-        elif newDir == 'RIGHT' and player.currDir != 'LEFT':
-            player.currDir = 'RIGHT'
+        if newDir == 'UP' and playerBike.currDir != 'DOWN':
+            playerBike.currDir = 'UP'
+        elif newDir == 'DOWN' and playerBike.currDir != 'UP':
+            playerBike.currDir = 'DOWN'
+        elif newDir == 'LEFT' and playerBike.currDir != 'RIGHT':
+            playerBike.currDir = 'LEFT'
+        elif newDir == 'RIGHT' and playerBike.currDir != 'LEFT':
+            playerBike.currDir = 'RIGHT'
 
-        if player.currDir == 'UP':
+        if playerBike.currDir == 'UP':
             player.y -= 5
-            player.createTrail()
-        elif player.currDir == 'DOWN':
+        elif playerBike.currDir == 'DOWN':
             player.y += 5
-            player.createTrail()
-        elif player.currDir == 'LEFT':
+        elif playerBike.currDir == 'LEFT':
             player.x -= 5
-            player.createTrail()
-        elif player.currDir == 'RIGHT':
+        elif playerBike.currDir == 'RIGHT':
             player.x += 5
-            player.createTrail()
+        
+        player.addBlock(gameDisplay)
         
         # Opponent Movement
-        if oppNewDir == 'UP' and opp.currDir != 'DOWN':
-            opp.currDir = 'UP'
-        elif oppNewDir == 'DOWN' and opp.currDir != 'UP':
-            opp.currDir = 'DOWN'
-        elif oppNewDir == 'LEFT' and opp.currDir != 'RIGHT':
-            opp.currDir = 'LEFT'
-        elif oppNewDir == 'RIGHT' and opp.currDir != 'LEFT':
-            opp.currDir = 'RIGHT'
+        if oppNewDir == 'UP' and oppBike.currDir != 'DOWN':
+            oppBike.currDir = 'UP'
+        elif oppNewDir == 'DOWN' and oppBike.currDir != 'UP':
+            oppBike.currDir = 'DOWN'
+        elif oppNewDir == 'LEFT' and oppBike.currDir != 'RIGHT':
+            oppBike.currDir = 'LEFT'
+        elif oppNewDir == 'RIGHT' and oppBike.currDir != 'LEFT':
+            oppBike.currDir = 'RIGHT'
 
-        if opp.currDir == 'UP':
+        if oppBike.currDir == 'UP':
             opp.y -= 5
-            opp.createTrail()
-        elif opp.currDir == 'DOWN':
+        elif oppBike.currDir == 'DOWN':
             opp.y += 5
-            opp.createTrail()
-        elif opp.currDir == 'LEFT':
+        elif oppBike.currDir == 'LEFT':
             opp.x -= 5
-            opp.createTrail()
-        elif opp.currDir == 'RIGHT':
+        elif oppBike.currDir == 'RIGHT':
             opp.x += 5
-            opp.createTrail()
+        
+        opp.addBlock(gameDisplay)
 
-        # Render game
+        # Rendering
         gameDisplay.fill(BACKGROUND)  
         player.render()
         opp.render()
 
         # Check Player Collisions
-        player.checkCollisions(opp.trailRects)
-        opp.checkCollisions(player.trailRects)
-
+        if player.checkCollisions(opp.blocks, (DISPLAY_WIDTH, DISPLAY_HEIGHT)) or opp.checkCollisions(player.blocks, (DISPLAY_WIDTH, DISPLAY_HEIGHT)):
+            gameOver()
+        
         pygame.display.update()
         clock.tick(60)
 
