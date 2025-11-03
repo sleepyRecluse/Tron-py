@@ -19,6 +19,11 @@ gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pygame.display.set_caption("TRON")
 
 clock = pygame.time.Clock()
+startTime = pygame.time.get_ticks()
+
+background = pygame.transform.scale(pygame.image.load("./images/background.png"), (DISPLAY_WIDTH, DISPLAY_HEIGHT))
+backgroundRect = background.get_rect()
+backgroundRect.center = ((DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2))
 
 bikeSize = 41
 trailSize = 11
@@ -91,6 +96,9 @@ def loop():
     oppNewDir = oppBike.currDir
 
     while not derezzed:
+        currentTime = pygame.time.get_ticks()
+        elapsedTime = (currentTime - startTime) / 1000
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quitGame()
@@ -164,9 +172,10 @@ def loop():
         opp.addBlock(gameDisplay)
 
         # Rendering
-        gameDisplay.fill(BACKGROUND)  
+        gameDisplay.blit(background, backgroundRect)
         player.render()
         opp.render()
+        drawText(gameDisplay, str(int(elapsedTime)), None, 30, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.02)
 
         # Check Player Collisions
         if player.checkCollisions(opp.blocks, (DISPLAY_WIDTH, DISPLAY_HEIGHT)) or opp.checkCollisions(player.blocks, (DISPLAY_WIDTH, DISPLAY_HEIGHT)):
