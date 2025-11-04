@@ -19,7 +19,6 @@ gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pygame.display.set_caption("TRON")
 
 clock = pygame.time.Clock()
-startTime = pygame.time.get_ticks()
 
 background = pygame.transform.scale(pygame.image.load("./images/background.png"), (DISPLAY_WIDTH, DISPLAY_HEIGHT))
 backgroundRect = background.get_rect()
@@ -95,10 +94,12 @@ def loop():
     oppBike.currDir = "DOWN"
     oppNewDir = oppBike.currDir
 
+    startTime = pygame.time.get_ticks()
+
     while not derezzed:
         currentTime = pygame.time.get_ticks()
         elapsedTime = (currentTime - startTime) / 1000
-
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quitGame()
@@ -128,6 +129,8 @@ def loop():
                 elif event.key == pygame.K_DOWN:            # move opponent down
                     oppNewDir = "DOWN"
                     oppBike.image = oppBike.downImg
+                elif event.key == pygame.K_ESCAPE:
+                    gameOver()
                 
         # Player Movement
         if newDir == 'UP' and playerBike.currDir != 'DOWN':
