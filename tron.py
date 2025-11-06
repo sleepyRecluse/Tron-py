@@ -1,6 +1,6 @@
 import pygame
 from player import Player, Bike
-from component import Button
+from component import Button, Menu
 
 pygame.init()
 
@@ -10,10 +10,11 @@ DISPLAY_HEIGHT = 800
 
 # Constamt Colors
 BACKGROUND = (20, 20, 20)
-WHITE = (255, 255, 255)
+WHITE = (240, 245, 240)
 BLACK = (0, 0 , 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
+RED = (185, 45, 45)
+GREEN = (45, 180, 45)
+BLUE = (125, 253, 254)
 
 gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pygame.display.set_caption("TRON")
@@ -30,6 +31,8 @@ maxTrailLength = 50
 
 objects = []
 
+# testMenu = Menu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, 500, 500, RED)
+
 def drawText(surface, text, fontName, fontSize, color, x, y):
     font = pygame.font.SysFont(fontName, fontSize)
     textSurface = font.render(text, True, color)
@@ -41,22 +44,71 @@ def quitGame():
     pygame.quit()
     quit()
 
+# def modeSelect():
+#     titleFontSize = 180
+#     btnWidth = 300
+#     btnHeight = 100
+#     btnFontSize = 30
+
+#     objects.clear()
+
+#     while True:
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 quitGame()
+
+#         gameDisplay.fill(BACKGROUND)
+#         drawText(gameDisplay, "TRON", None, titleFontSize, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 8)
+#         btnRect = pygame.Rect(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.55)
+#         btnRect.center = ((DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2))
+#         pygame.draw.rect(gameDisplay, (55, 55, 55), btnRect)
+#         pvpBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 3, btnWidth, btnHeight, WHITE, BLUE, BLACK, btnFontSize, "PVP")
+#         vsCpuBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, btnWidth, btnHeight, WHITE, GREEN, BLACK, btnFontSize, "VS CPU")
+#         backBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, btnWidth, btnHeight, WHITE, RED, BLACK, btnFontSize, "Back", startScreen)
+
+#         objects.append(pvpBtn)
+#         objects.append(vsCpuBtn)
+#         objects.append(backBtn)
+
+#         for obj in objects:
+#             obj.render(gameDisplay)
+
+#         pygame.display.update()
+#         clock.tick(15)
+
 def startScreen():
+    titleFontSize = 180
+    btnWidth = 300
+    btnHeight = 100
+    btnFontSize = 30
+
+    objects.clear()
+    # testMenu.addButton(WHITE, GREEN, BLACK, "1")
+    # testMenu.addButton(BLUE, (255, 0, 255), BLACK, "2")
+    # testMenu.addButton((150, 150, 150), RED, BLACK, "3")
+
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quitGame()
 
         gameDisplay.fill(BACKGROUND)
-        playButton = Button(DISPLAY_WIDTH / 9, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, BLACK, "Play", loop)
-        quitButton = Button(DISPLAY_WIDTH - DISPLAY_WIDTH / 3, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, RED, BLACK, "Quit", quitGame)
+        drawText(gameDisplay, "TRON", None, titleFontSize, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 8)
+        btnRect = pygame.Rect(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.55)
+        btnRect.center = ((DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2))
+        pygame.draw.rect(gameDisplay, (55, 55, 55), btnRect)
+        selectModeBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 3, btnWidth, btnHeight, WHITE, BLUE, BLACK, btnFontSize, "Game Modes", loop)
+        settingsBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, btnWidth, btnHeight, WHITE, GREEN, BLACK, btnFontSize, "Settings")
+        quitBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, btnWidth, btnHeight, WHITE, RED, BLACK, btnFontSize, "Quit Game", quitGame)
 
-        objects.append(playButton)
-        objects.append(quitButton)
+
+        objects.append(selectModeBtn)
+        objects.append(settingsBtn)
+        objects.append(quitBtn)
+
         for obj in objects:
             obj.render(gameDisplay)
-
-        drawText(gameDisplay, "TRON", None, 160, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2)
 
         pygame.display.update()
         clock.tick(15)
@@ -68,10 +120,10 @@ def gameOver():
                 quitGame()
         objects.clear()
         
-        continueButton = Button(DISPLAY_WIDTH / 9, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, BLACK, "Continue", loop)
+        continueButton = Button(DISPLAY_WIDTH * 0.25, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, BLACK, 35, "Continue", loop)
         objects.append(continueButton)
 
-        quitButton = Button(DISPLAY_WIDTH - DISPLAY_WIDTH / 3, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, RED, BLACK, "Quit", quitGame)
+        quitButton = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, RED, BLACK, 35, "Quit", quitGame)
         objects.append(quitButton)
 
         for obj in objects:
