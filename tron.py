@@ -31,8 +31,6 @@ maxTrailLength = 50
 
 objects = []
 
-# testMenu = Menu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, 500, 500, RED)
-
 def drawText(surface, text, fontName, fontSize, color, x, y):
     font = pygame.font.SysFont(fontName, fontSize)
     textSurface = font.render(text, True, color)
@@ -44,92 +42,19 @@ def quitGame():
     pygame.quit()
     quit()
 
-# def modeSelect():
-#     titleFontSize = 180
-#     btnWidth = 300
-#     btnHeight = 100
-#     btnFontSize = 30
-
-#     objects.clear()
-
-#     while True:
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 quitGame()
-
-#         gameDisplay.fill(BACKGROUND)
-#         drawText(gameDisplay, "TRON", None, titleFontSize, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 8)
-#         btnRect = pygame.Rect(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.55)
-#         btnRect.center = ((DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2))
-#         pygame.draw.rect(gameDisplay, (55, 55, 55), btnRect)
-#         pvpBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 3, btnWidth, btnHeight, WHITE, BLUE, BLACK, btnFontSize, "PVP")
-#         vsCpuBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, btnWidth, btnHeight, WHITE, GREEN, BLACK, btnFontSize, "VS CPU")
-#         backBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, btnWidth, btnHeight, WHITE, RED, BLACK, btnFontSize, "Back", startScreen)
-
-#         objects.append(pvpBtn)
-#         objects.append(vsCpuBtn)
-#         objects.append(backBtn)
-
-#         for obj in objects:
-#             obj.render(gameDisplay)
-
-#         pygame.display.update()
-#         clock.tick(15)
-
-def startScreen():
-    titleFontSize = 180
-    btnWidth = 300
-    btnHeight = 100
-    btnFontSize = 30
-
-    objects.clear()
-    # testMenu.addButton(WHITE, GREEN, BLACK, "1")
-    # testMenu.addButton(BLUE, (255, 0, 255), BLACK, "2")
-    # testMenu.addButton((150, 150, 150), RED, BLACK, "3")
-
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                quitGame()
-
-        gameDisplay.fill(BACKGROUND)
-        drawText(gameDisplay, "TRON", None, titleFontSize, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 8)
-        btnRect = pygame.Rect(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.55)
-        btnRect.center = ((DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2))
-        pygame.draw.rect(gameDisplay, (55, 55, 55), btnRect)
-        selectModeBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 3, btnWidth, btnHeight, WHITE, BLUE, BLACK, btnFontSize, "Game Modes", loop)
-        settingsBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, btnWidth, btnHeight, WHITE, GREEN, BLACK, btnFontSize, "Settings")
-        quitBtn = Button(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, btnWidth, btnHeight, WHITE, RED, BLACK, btnFontSize, "Quit Game", quitGame)
-
-
-        objects.append(selectModeBtn)
-        objects.append(settingsBtn)
-        objects.append(quitBtn)
-
-        for obj in objects:
-            obj.render(gameDisplay)
-
-        pygame.display.update()
-        clock.tick(15)
-
 def gameOver():
+    gameOverMenu = Menu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.55, DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.4)
+    gameOverMenu.addButton(WHITE, GREEN, BLACK, "Continue", loop)
+    gameOverMenu.addButton(WHITE, RED, BLACK, "Quit", quitGame)
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quitGame()
-        objects.clear()
         
-        continueButton = Button(DISPLAY_WIDTH * 0.25, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, GREEN, BLACK, 35, "Continue", loop)
-        objects.append(continueButton)
+        drawText(gameDisplay, "Game Over", None, 180, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.3)
+        gameOverMenu.render(gameDisplay)
 
-        quitButton = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT - DISPLAY_HEIGHT / 3, 200, 100, WHITE, RED, BLACK, 35, "Quit", quitGame)
-        objects.append(quitButton)
-
-        for obj in objects:
-            obj.render(gameDisplay)
-
-        drawText(gameDisplay, "Game Over", None, 160, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2)
         pygame.display.update()
         clock.tick(15)
 
@@ -239,6 +164,46 @@ def loop():
         pygame.display.update()
         clock.tick(60)
 
-startScreen()
-loop()
+# Menu
+menu = Menu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, DISPLAY_WIDTH * 0.4, DISPLAY_HEIGHT * 0.6, (35, 35, 35))
+
+def toStartMenu():
+    menu.buttons.clear()
+    menu.addButton(WHITE, BLUE, BLACK, "Select Mode", toSelectMode)
+    menu.addButton(WHITE, GREEN, BLACK, "Settings")
+    menu.addButton(WHITE, RED, BLACK, "Quit", quitGame)
+
+def toSelectMode():
+    menu.buttons.clear()
+    menu.addButton(WHITE, BLUE, BLACK, "PvP", loop)
+    menu.addButton(WHITE, GREEN, BLACK, "VS Cpu")
+    menu.addButton(WHITE, (220, 220, 220), BLACK, "Skill Test")
+    
+menu.addButton(WHITE, BLUE, BLACK, "Select Mode", toSelectMode)
+menu.addButton(WHITE, GREEN, BLACK, "Settings")
+menu.addButton(WHITE, RED, BLACK, "Quit", quitGame)
+
+def screen():
+    titleFontSize = 180
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quitGame()
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT and menu.buttons[0].text == "PvP":
+                    toStartMenu()
+
+        gameDisplay.fill(BACKGROUND)
+        drawText(gameDisplay, "TRON", None, titleFontSize, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 8)
+        menu.render(gameDisplay)
+
+        if menu.buttons[0].text == "PvP":
+            drawText(gameDisplay, "< Click left arrow to return to start menu > ", None, 22, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.9)
+
+        pygame.display.update()
+        clock.tick(15)
+
+screen()
 quitGame()

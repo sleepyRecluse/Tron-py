@@ -40,7 +40,7 @@ class Button():
         screen.blit(self.buttonSurface, self.buttonRect)
 
 class Menu():
-    def __init__(self, x, y, width, height, color):
+    def __init__(self, x, y, width, height, color = None):
         self.x = x
         self.y = y
         self.width = width
@@ -49,13 +49,14 @@ class Menu():
 
         self.buttons = []
         self.surface = pygame.Surface((self.width, self.height))
-        self.surface.fill(self.color)
+        if self.color != None:
+            self.surface.fill(self.color)
         self.rect = self.surface.get_rect()
         self.rect.center = ((self.x, self.y))
 
-    def addButton(self, color, activeColor, textColor, text):
+    def addButton(self, color, activeColor, textColor, text, onClick=None):
         if len(self.buttons) == 0:
-            btn = Button(self.x, self.y, self.width * 0.8, self.height * 0.8, color, activeColor, textColor, int(self.width / 10), text)
+            btn = Button(self.x, self.y, self.width * 0.8, self.height * 0.8, color, activeColor, textColor, int(self.width / 10), text, onClick)
             self.buttons.append(btn)
         else: 
             top = self.y - self.height / 2
@@ -75,16 +76,17 @@ class Menu():
             for btn in tmp:
                 if (i == 0): btn.y = startY 
                 else: btn.y = startY + (padding + height) * i
-                updBtn = Button(btn.x, btn.y, width, height, btn.color, btn.activeColor, btn.textColor, btn.fontSize, btn.text, btn.onClick)
+                updBtn = Button(btn.x, btn.y, width, height, btn.color, btn.activeColor, btn.textColor, int(fontSize), btn.text, btn.onClick)
                 self.buttons.append(updBtn)
                 i += 1
             y = startY + (padding + height) * i 
 
-            btn = Button(self.x, y, width, height, color, activeColor, textColor, int(fontSize), text)
+            btn = Button(self.x, y, width, height, color, activeColor, textColor, int(fontSize), text, onClick)
             self.buttons.append(btn)
 
     def render(self, screen):
-        screen.blit(self.surface, self.rect)
+        if self.color != None:
+            screen.blit(self.surface, self.rect)
 
         for btn in self.buttons:
             btn.render(screen)
