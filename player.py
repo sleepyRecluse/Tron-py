@@ -73,3 +73,22 @@ class Player():
         if self.blocks[-1].rect.collidelist(oppBlocks) != -1:
             return True
         return False
+    
+    def move(self, newDir):
+        if newDir == 'UP' and self.bike.currDir != 'DOWN':
+            self.bike.currDir = 'UP'
+        elif newDir == 'DOWN' and self.bike.currDir != 'UP':
+            self.bike.currDir = 'DOWN'
+        elif newDir == 'LEFT' and self.bike.currDir != 'RIGHT':
+            self.bike.currDir = 'LEFT'
+        elif newDir == 'RIGHT' and self.bike.currDir != 'LEFT':
+            self.bike.currDir = 'RIGHT'
+
+        if self.bike.currDir == 'UP':
+            self.y -= 5
+        elif self.bike.currDir == 'DOWN':
+            self.y += 5
+        elif self.bike.currDir == 'LEFT':
+            self.x -= 5
+        elif self.bike.currDir == 'RIGHT':
+            self.x += 5

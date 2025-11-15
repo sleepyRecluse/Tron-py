@@ -95,6 +95,7 @@ def loop():
                 elif event.key == pygame.K_s:               # move player down
                     newDir = "DOWN"
                     playerBike.image = playerBike.downImg
+                    
                 elif event.key == pygame.K_LEFT:            # move opponent left
                     oppNewDir = "LEFT"
                     oppBike.image = oppBike.leftImg
@@ -111,45 +112,11 @@ def loop():
                     gameOver()
                 
         # Player Movement
-        if newDir == 'UP' and playerBike.currDir != 'DOWN':
-            playerBike.currDir = 'UP'
-        elif newDir == 'DOWN' and playerBike.currDir != 'UP':
-            playerBike.currDir = 'DOWN'
-        elif newDir == 'LEFT' and playerBike.currDir != 'RIGHT':
-            playerBike.currDir = 'LEFT'
-        elif newDir == 'RIGHT' and playerBike.currDir != 'LEFT':
-            playerBike.currDir = 'RIGHT'
-
-        if playerBike.currDir == 'UP':
-            player.y -= 5
-        elif playerBike.currDir == 'DOWN':
-            player.y += 5
-        elif playerBike.currDir == 'LEFT':
-            player.x -= 5
-        elif playerBike.currDir == 'RIGHT':
-            player.x += 5
-        
+        player.move(newDir)
         player.addBlock(gameDisplay)
         
         # Opponent Movement
-        if oppNewDir == 'UP' and oppBike.currDir != 'DOWN':
-            oppBike.currDir = 'UP'
-        elif oppNewDir == 'DOWN' and oppBike.currDir != 'UP':
-            oppBike.currDir = 'DOWN'
-        elif oppNewDir == 'LEFT' and oppBike.currDir != 'RIGHT':
-            oppBike.currDir = 'LEFT'
-        elif oppNewDir == 'RIGHT' and oppBike.currDir != 'LEFT':
-            oppBike.currDir = 'RIGHT'
-
-        if oppBike.currDir == 'UP':
-            opp.y -= 5
-        elif oppBike.currDir == 'DOWN':
-            opp.y += 5
-        elif oppBike.currDir == 'LEFT':
-            opp.x -= 5
-        elif oppBike.currDir == 'RIGHT':
-            opp.x += 5
-        
+        opp.move(oppNewDir)
         opp.addBlock(gameDisplay)
 
         # Rendering
