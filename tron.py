@@ -31,11 +31,15 @@ maxTrailLength = 50
 
 objects = []
 
-def drawText(surface, text, fontName, fontSize, color, x, y):
+def drawText(surface, text, fontName, fontSize, color, x, y, centered=True):
     font = pygame.font.SysFont(fontName, fontSize)
     textSurface = font.render(text, True, color)
     textRect = textSurface.get_rect()
-    textRect.center = ((x, y))
+    if centered:
+        textRect.center = ((x, y))
+    else:
+        textRect.x = x
+        textRect.y = y
     surface.blit(textSurface, textRect)
 
 def quitGame():
@@ -132,13 +136,67 @@ def loop():
         pygame.display.update()
         clock.tick(60)
 
+def settings():
+    wasdBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.175, 206, 50, WHITE, BLUE, BLACK, 28, "WASD", None, False)
+    arrowBtn = Button(DISPLAY_WIDTH * 0.655, DISPLAY_HEIGHT * 0.175, 206, 50, WHITE, BLUE, BLACK, 28, "Arrow Keys", None, False)
+
+    plySlowBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.275, 130, 50, WHITE, BLUE, BLACK, 28, "Slow", None, False)
+    plyNormalBtn = Button(DISPLAY_WIDTH * 0.55, DISPLAY_HEIGHT * 0.275, 130, 50, WHITE, BLUE, BLACK, 28, "Normal", None, False)
+    plyFastBtn = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT * 0.275, 130, 50, WHITE, BLUE, BLACK, 28, "Fast", None, False)
+
+    oppSlowBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.375, 130, 50, WHITE, BLUE, BLACK, 28, "Slow", None, False)
+    oppNormalBtn = Button(DISPLAY_WIDTH * 0.55, DISPLAY_HEIGHT * 0.375, 130, 50, WHITE, BLUE, BLACK, 28, "Normal", None, False)
+    oppFastBtn = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT * 0.375, 130, 50, WHITE, BLUE, BLACK, 28, "Fast", None, False)
+
+    plyBlueBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.475, 130, 50, WHITE, BLUE, BLACK, 28, "Blue", None, False)
+    plyOrangeBtn = Button(DISPLAY_WIDTH * 0.55, DISPLAY_HEIGHT * 0.475, 130, 50, WHITE, BLUE, BLACK, 28, "Orange", None, False)
+    plyRedBtn = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT * 0.475, 130, 50, WHITE, BLUE, BLACK, 28, "Red", None, False)
+
+    oppBlueBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.575, 130, 50, WHITE, BLUE, BLACK, 28, "Blue", None, False)
+    oppOrangeBtn = Button(DISPLAY_WIDTH * 0.55, DISPLAY_HEIGHT * 0.575, 130, 50, WHITE, BLUE, BLACK, 28, "Orange", None, False)
+    oppRedBtn = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT * 0.575, 130, 50, WHITE, BLUE, BLACK, 28, "Red", None, False)
+    
+    halfMinBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.675, 130, 50, WHITE, BLUE, BLACK, 28, "30 Secs.", None, False)
+    minBtn = Button(DISPLAY_WIDTH * 0.55, DISPLAY_HEIGHT * 0.675, 130, 50, WHITE, BLUE, BLACK, 28, "60 Secs.", None, False)
+    noneBtn = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT * 0.675, 130, 50, WHITE, BLUE, BLACK, 28, "No Limit", None, False)
+
+
+    btns = [wasdBtn, arrowBtn, plySlowBtn, plyNormalBtn, plyFastBtn, oppSlowBtn, oppNormalBtn, oppFastBtn, plyBlueBtn, plyOrangeBtn, plyRedBtn, oppBlueBtn, oppOrangeBtn, oppRedBtn, halfMinBtn, minBtn, noneBtn]
+    
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quitGame()
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    screen()
+        
+        gameDisplay.fill(BACKGROUND)
+        drawText(gameDisplay, "Settings", None, 100, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.08)
+        drawText(gameDisplay, "Player Controls", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.2, False)
+        drawText(gameDisplay, "Player Speed", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.3, False)
+        drawText(gameDisplay, "Opponent Speed", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.4, False)
+        drawText(gameDisplay, "Player Color", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.5, False)
+        drawText(gameDisplay, "Opponent Color", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.6, False)
+        drawText(gameDisplay, "Time Limit", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.7, False)
+
+        drawText(gameDisplay, "< Click left arrow to return to start menu > ", None, 22, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.9)
+        
+        for btn in btns:
+            btn.render(gameDisplay)
+        
+        pygame.display.update()
+        clock.tick(15)
+        
+
 # Menu
 menu = Menu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, DISPLAY_WIDTH * 0.4, DISPLAY_HEIGHT * 0.6, (35, 35, 35))
 
 def toStartMenu():
     menu.buttons.clear()
     menu.addButton(WHITE, BLUE, BLACK, "Select Mode", toSelectMode)
-    menu.addButton(WHITE, GREEN, BLACK, "Settings")
+    menu.addButton(WHITE, GREEN, BLACK, "Settings", settings)
     menu.addButton(WHITE, RED, BLACK, "Quit", quitGame)
 
 def toSelectMode():
@@ -146,13 +204,12 @@ def toSelectMode():
     menu.addButton(WHITE, BLUE, BLACK, "PvP", loop)
     menu.addButton(WHITE, GREEN, BLACK, "VS Cpu")
     menu.addButton(WHITE, (175, 125, 0), BLACK, "Skill Test")
-    
-menu.addButton(WHITE, BLUE, BLACK, "Select Mode", toSelectMode)
-menu.addButton(WHITE, GREEN, BLACK, "Settings")
-menu.addButton(WHITE, RED, BLACK, "Quit", quitGame)
 
 def screen():
     titleFontSize = 180
+    menu.addButton(WHITE, BLUE, BLACK, "Select Mode", toSelectMode)
+    menu.addButton(WHITE, GREEN, BLACK, "Settings", settings)
+    menu.addButton(WHITE, RED, BLACK, "Quit", quitGame)
 
     while True:
         for event in pygame.event.get():

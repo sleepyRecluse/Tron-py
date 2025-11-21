@@ -1,7 +1,7 @@
 import pygame 
 
 class Button():
-    def __init__(self, x, y, width, height, color, activeColor, textColor, fontSize, text="Button", onClick=None):
+    def __init__(self, x, y, width, height, color, activeColor, textColor, fontSize, text="Button", onClick=None, centered=True):
         # Attributes
         self.x = x
         self.y = y
@@ -20,7 +20,8 @@ class Button():
         # Define button and text surfaces
         self.buttonSurface = pygame.Surface((self.width, self.height))
         self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.buttonRect.center = ((self.x, self.y))
+        if centered:
+            self.buttonRect.center = ((self.x, self.y))
         self.textSurface = self.buttonFont.render(self.text, True, self.textColor)
         
     def render(self, screen):
@@ -56,7 +57,7 @@ class Menu():
 
     def addButton(self, color, activeColor, textColor, text, onClick=None):
         if len(self.buttons) == 0:
-            btn = Button(self.x, self.y, self.width * 0.8, self.height * 0.8, color, activeColor, textColor, int(self.width / 10), text, onClick)
+            btn = Button(self.x, self.y, self.width * 0.8, self.height * 0.8, color, activeColor, textColor, int(self.height / 4), text, onClick)
             self.buttons.append(btn)
         else: 
             top = self.y - self.height / 2
@@ -68,7 +69,7 @@ class Menu():
             padding = avalSpace / res
             startY = top + padding + height / 2
             
-            fontSize = width / 10
+            fontSize = height / 4
 
             i = 0
             tmp = self.buttons.copy()
