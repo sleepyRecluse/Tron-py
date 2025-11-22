@@ -40,7 +40,7 @@ class Button():
         
         screen.blit(self.buttonSurface, self.buttonRect)
 
-class Menu():
+class VerticalMenu():
     def __init__(self, x, y, width, height, color = None):
         self.x = x
         self.y = y
@@ -57,7 +57,7 @@ class Menu():
 
     def addButton(self, color, activeColor, textColor, text, onClick=None):
         if len(self.buttons) == 0:
-            btn = Button(self.x, self.y, self.width * 0.8, self.height * 0.8, color, activeColor, textColor, int(self.height / 4), text, onClick)
+            btn = Button(self.x, self.y, self.width * 0.8, self.height * 0.8, color, activeColor, textColor, int(self.height / 3), text, onClick)
             self.buttons.append(btn)
         else: 
             top = self.y - self.height / 2
@@ -69,7 +69,7 @@ class Menu():
             padding = avalSpace / res
             startY = top + padding + height / 2
             
-            fontSize = height / 4
+            fontSize = height / 3
 
             i = 0
             tmp = self.buttons.copy()
@@ -91,3 +91,37 @@ class Menu():
 
         for btn in self.buttons:
             btn.render(screen)
+
+class HorizontalMenu(VerticalMenu):
+    def __init__(self, x, y, width, height, color=None):
+        super().__init__(x, y, width, height, color)
+    
+    def addButton(self, color, activeColor, textColor, text, onClick=None):
+        if len(self.buttons) == 0:
+            btn = Button(self.x, self.y, self.width * 0.9, self.height * 0.8, color, activeColor, textColor, int(self.height / 3), text, onClick)
+            self.buttons.append(btn)
+        else: 
+            left = self.x - self.width / 2
+            res = (len(self.buttons) + 2)
+
+            height = self.height * 0.8
+            width = (self.width / res) * 0.8
+            avalSpace = self.width - width * (res - 1)
+            padding = avalSpace / res
+            startX = left + padding + width / 2
+            
+            fontSize = height / 3
+
+            i = 0
+            tmp = self.buttons.copy()
+            self.buttons.clear()
+            for btn in tmp:
+                if (i == 0): btn.x = startX
+                else: btn.x = startX + (padding + width) * i
+                updBtn = Button(btn.x, btn.y, width, height, btn.color, btn.activeColor, btn.textColor, int(fontSize), btn.text, btn.onClick)
+                self.buttons.append(updBtn)
+                i += 1
+            x = startX + (padding + width) * i 
+
+            btn = Button(x, self.y, width, height, color, activeColor, textColor, int(fontSize), text, onClick)
+            self.buttons.append(btn)

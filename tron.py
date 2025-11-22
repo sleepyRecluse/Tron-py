@@ -1,6 +1,6 @@
 import pygame
 from player import Player, Bike
-from component import Button, Menu
+from component import Button, VerticalMenu, HorizontalMenu
 
 pygame.init()
 
@@ -47,7 +47,7 @@ def quitGame():
     quit()
 
 def gameOver():
-    gameOverMenu = Menu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.55, DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.4)
+    gameOverMenu = VerticalMenu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.55, DISPLAY_WIDTH * 0.5, DISPLAY_HEIGHT * 0.4)
     gameOverMenu.addButton(WHITE, GREEN, BLACK, "Continue", loop)
     gameOverMenu.addButton(WHITE, (255, 89, 0), BLACK, "Select Mode", screen)
     gameOverMenu.addButton(WHITE, RED, BLACK, "Quit", quitGame)
@@ -182,7 +182,6 @@ def settings():
         drawText(gameDisplay, "Time Limit", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.7, False)
 
         drawText(gameDisplay, "< Click left arrow to return to start menu > ", None, 22, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.9)
-        
         for btn in btns:
             btn.render(gameDisplay)
         
@@ -191,7 +190,7 @@ def settings():
         
 
 # Menu
-menu = Menu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, DISPLAY_WIDTH * 0.4, DISPLAY_HEIGHT * 0.6, (35, 35, 35))
+menu = VerticalMenu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, DISPLAY_WIDTH * 0.4, DISPLAY_HEIGHT * 0.6, (35, 35, 35))
 
 def toStartMenu():
     menu.buttons.clear()
