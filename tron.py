@@ -137,31 +137,36 @@ def loop():
         clock.tick(60)
 
 def settings():
-    wasdBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.175, 206, 50, WHITE, BLUE, BLACK, 28, "WASD", None, False)
-    arrowBtn = Button(DISPLAY_WIDTH * 0.655, DISPLAY_HEIGHT * 0.175, 206, 50, WHITE, BLUE, BLACK, 28, "Arrow Keys", None, False)
+    wasdBtn = Button(DISPLAY_WIDTH * 0.335, DISPLAY_HEIGHT * 0.175, 220, 50, WHITE, BLUE, BLACK, 28, "WASD", None, False)
+    arrowBtn = Button(DISPLAY_WIDTH * 0.66, DISPLAY_HEIGHT * 0.175, 220, 50, WHITE, BLUE, BLACK, 28, "Arrow Keys", None, False)
+    x = 0.65 - 0.635
+    plySpeedMenu = HorizontalMenu(DISPLAY_WIDTH * 0.635, DISPLAY_HEIGHT * 0.3, DISPLAY_WIDTH * 0.7, DISPLAY_HEIGHT * 0.075)
+    plySpeedMenu.addButton(WHITE, BLUE, BLACK, "Slow")
+    plySpeedMenu.addButton(WHITE, BLUE, BLACK, "Normal")
+    plySpeedMenu.addButton(WHITE, BLUE, BLACK, "Fast")
 
-    plySlowBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.275, 130, 50, WHITE, BLUE, BLACK, 28, "Slow", None, False)
-    plyNormalBtn = Button(DISPLAY_WIDTH * 0.55, DISPLAY_HEIGHT * 0.275, 130, 50, WHITE, BLUE, BLACK, 28, "Normal", None, False)
-    plyFastBtn = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT * 0.275, 130, 50, WHITE, BLUE, BLACK, 28, "Fast", None, False)
+    oppSpeedMenu = HorizontalMenu(DISPLAY_WIDTH * 0.635, DISPLAY_HEIGHT * 0.4, DISPLAY_WIDTH * 0.7, DISPLAY_HEIGHT * 0.075)
+    oppSpeedMenu.addButton(WHITE, BLUE, BLACK, "Slow")
+    oppSpeedMenu.addButton(WHITE, BLUE, BLACK, "Normal")
+    oppSpeedMenu.addButton(WHITE, BLUE, BLACK, "Fast")
 
-    oppSlowBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.375, 130, 50, WHITE, BLUE, BLACK, 28, "Slow", None, False)
-    oppNormalBtn = Button(DISPLAY_WIDTH * 0.55, DISPLAY_HEIGHT * 0.375, 130, 50, WHITE, BLUE, BLACK, 28, "Normal", None, False)
-    oppFastBtn = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT * 0.375, 130, 50, WHITE, BLUE, BLACK, 28, "Fast", None, False)
+    plyColorMenu = HorizontalMenu(DISPLAY_WIDTH * 0.635, DISPLAY_HEIGHT * 0.5, DISPLAY_WIDTH * 0.7, DISPLAY_HEIGHT * 0.075)
+    plyColorMenu.addButton(WHITE, BLUE, BLACK, "Blue")
+    plyColorMenu.addButton(WHITE, BLUE, BLACK, "Orange")
+    plyColorMenu.addButton(WHITE, BLUE, BLACK, "Red")
 
-    plyBlueBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.475, 130, 50, WHITE, BLUE, BLACK, 28, "Blue", None, False)
-    plyOrangeBtn = Button(DISPLAY_WIDTH * 0.55, DISPLAY_HEIGHT * 0.475, 130, 50, WHITE, BLUE, BLACK, 28, "Orange", None, False)
-    plyRedBtn = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT * 0.475, 130, 50, WHITE, BLUE, BLACK, 28, "Red", None, False)
+    oppColorMenu = HorizontalMenu(DISPLAY_WIDTH * 0.635, DISPLAY_HEIGHT * 0.6, DISPLAY_WIDTH * 0.7, DISPLAY_HEIGHT * 0.075)
+    oppColorMenu.addButton(WHITE, BLUE, BLACK, "Blue")
+    oppColorMenu.addButton(WHITE, BLUE, BLACK, "Orange")
+    oppColorMenu.addButton(WHITE, BLUE, BLACK, "Red")
 
-    oppBlueBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.575, 130, 50, WHITE, BLUE, BLACK, 28, "Blue", None, False)
-    oppOrangeBtn = Button(DISPLAY_WIDTH * 0.55, DISPLAY_HEIGHT * 0.575, 130, 50, WHITE, BLUE, BLACK, 28, "Orange", None, False)
-    oppRedBtn = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT * 0.575, 130, 50, WHITE, BLUE, BLACK, 28, "Red", None, False)
-    
-    halfMinBtn = Button(DISPLAY_WIDTH * 0.35, DISPLAY_HEIGHT * 0.675, 130, 50, WHITE, BLUE, BLACK, 28, "30 Secs.", None, False)
-    minBtn = Button(DISPLAY_WIDTH * 0.55, DISPLAY_HEIGHT * 0.675, 130, 50, WHITE, BLUE, BLACK, 28, "60 Secs.", None, False)
-    noneBtn = Button(DISPLAY_WIDTH * 0.75, DISPLAY_HEIGHT * 0.675, 130, 50, WHITE, BLUE, BLACK, 28, "No Limit", None, False)
+    timeMenu = HorizontalMenu(DISPLAY_WIDTH * 0.635, DISPLAY_HEIGHT * 0.7, DISPLAY_WIDTH * 0.7, DISPLAY_HEIGHT * 0.075)
+    timeMenu.addButton(WHITE, BLUE, BLACK, "30 Secs")
+    timeMenu.addButton(WHITE, BLUE, BLACK, "60 Secs")
+    timeMenu.addButton(WHITE, BLUE, BLACK, "No Limit")
 
-
-    btns = [wasdBtn, arrowBtn, plySlowBtn, plyNormalBtn, plyFastBtn, oppSlowBtn, oppNormalBtn, oppFastBtn, plyBlueBtn, plyOrangeBtn, plyRedBtn, oppBlueBtn, oppOrangeBtn, oppRedBtn, halfMinBtn, minBtn, noneBtn]
+    btns = [wasdBtn, arrowBtn]
+    menus = [plySpeedMenu, oppSpeedMenu, plyColorMenu, oppColorMenu, timeMenu]
     
     while True:
         for event in pygame.event.get():
@@ -174,16 +179,20 @@ def settings():
         
         gameDisplay.fill(BACKGROUND)
         drawText(gameDisplay, "Settings", None, 100, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.08)
-        drawText(gameDisplay, "Player Controls", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.2, False)
-        drawText(gameDisplay, "Player Speed", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.3, False)
-        drawText(gameDisplay, "Opponent Speed", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.4, False)
-        drawText(gameDisplay, "Player Color", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.5, False)
-        drawText(gameDisplay, "Opponent Color", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.6, False)
-        drawText(gameDisplay, "Time Limit", None, 28, WHITE, DISPLAY_WIDTH * 0.075, DISPLAY_HEIGHT * 0.7, False)
+        drawText(gameDisplay, "Player Controls", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.2, False)
+        drawText(gameDisplay, "Player Speed", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.3, False)
+        drawText(gameDisplay, "Opponent Speed", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.4, False)
+        drawText(gameDisplay, "Player Color", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.5, False)
+        drawText(gameDisplay, "Opponent Color", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.6, False)
+        drawText(gameDisplay, "Time Limit", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.7, False)
+        
+        for b in btns:
+            b.render(gameDisplay)
+
+        for m in menus:
+            m.render(gameDisplay)
 
         drawText(gameDisplay, "< Click left arrow to return to start menu > ", None, 22, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.9)
-        for btn in btns:
-            btn.render(gameDisplay)
         
         pygame.display.update()
         clock.tick(15)
@@ -204,11 +213,12 @@ def toSelectMode():
     menu.addButton(WHITE, GREEN, BLACK, "VS Cpu")
     menu.addButton(WHITE, (175, 125, 0), BLACK, "Skill Test")
 
+menu.addButton(WHITE, BLUE, BLACK, "Select Mode", toSelectMode)
+menu.addButton(WHITE, GREEN, BLACK, "Settings", settings)
+menu.addButton(WHITE, RED, BLACK, "Quit", quitGame)
+
 def screen():
     titleFontSize = 180
-    menu.addButton(WHITE, BLUE, BLACK, "Select Mode", toSelectMode)
-    menu.addButton(WHITE, GREEN, BLACK, "Settings", settings)
-    menu.addButton(WHITE, RED, BLACK, "Quit", quitGame)
 
     while True:
         for event in pygame.event.get():

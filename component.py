@@ -98,19 +98,19 @@ class HorizontalMenu(VerticalMenu):
     
     def addButton(self, color, activeColor, textColor, text, onClick=None):
         if len(self.buttons) == 0:
-            btn = Button(self.x, self.y, self.width * 0.9, self.height * 0.8, color, activeColor, textColor, int(self.height / 3), text, onClick)
+            btn = Button(self.x, self.y, self.width * 0.9, self.height * 0.8, color, activeColor, textColor, int(self.height / 2), text, onClick)
             self.buttons.append(btn)
         else: 
             left = self.x - self.width / 2
             res = (len(self.buttons) + 2)
 
             height = self.height * 0.8
-            width = (self.width / res) * 0.8
+            width = (self.width / res) * 0.95
             avalSpace = self.width - width * (res - 1)
             padding = avalSpace / res
             startX = left + padding + width / 2
             
-            fontSize = height / 3
+            fontSize = height / 2
 
             i = 0
             tmp = self.buttons.copy()
