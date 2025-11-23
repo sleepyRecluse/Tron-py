@@ -15,7 +15,7 @@ class Button():
         self.onClick = onClick
         self.clicked = False
 
-        self.buttonFont = pygame.font.SysFont(None, self.fontSize)
+        self.buttonFont = pygame.font.Font("./fonts/ScienceGothic_Condensed-Light.ttf", self.fontSize)
 
         # Define button and text surfaces
         self.buttonSurface = pygame.Surface((self.width, self.height))

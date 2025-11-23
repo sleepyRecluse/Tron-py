@@ -29,10 +29,14 @@ bikeSize = 41
 trailSize = 11
 maxTrailLength = 50
 
+fontRegular = "./fonts/ScienceGothic-Regular.ttf"
+fontThin = "./fonts/ScienceGothic_Condensed-Light.ttf"
+
 objects = []
 
 def drawText(surface, text, fontName, fontSize, color, x, y, centered=True):
-    font = pygame.font.SysFont(fontName, fontSize)
+    font = pygame.font.Font(fontName, fontSize)
+
     textSurface = font.render(text, True, color)
     textRect = textSurface.get_rect()
     if centered:
@@ -137,29 +141,35 @@ def loop():
         clock.tick(60)
 
 def settings():
-    wasdBtn = Button(DISPLAY_WIDTH * 0.335, DISPLAY_HEIGHT * 0.175, 220, 50, WHITE, BLUE, BLACK, 28, "WASD", None, False)
-    arrowBtn = Button(DISPLAY_WIDTH * 0.66, DISPLAY_HEIGHT * 0.175, 220, 50, WHITE, BLUE, BLACK, 28, "Arrow Keys", None, False)
-    x = 0.65 - 0.635
+    # Control Settings
+    wasdBtn = Button(DISPLAY_WIDTH * 0.335, DISPLAY_HEIGHT * 0.175, 220, 50, WHITE, BLUE, BLACK, 26, "WASD", None, False)
+    arrowBtn = Button(DISPLAY_WIDTH * 0.66, DISPLAY_HEIGHT * 0.175, 220, 50, WHITE, BLUE, BLACK, 26, "Arrow Keys", None, False)
+
+    # Player Speed Settings
     plySpeedMenu = HorizontalMenu(DISPLAY_WIDTH * 0.635, DISPLAY_HEIGHT * 0.3, DISPLAY_WIDTH * 0.7, DISPLAY_HEIGHT * 0.075)
     plySpeedMenu.addButton(WHITE, BLUE, BLACK, "Slow")
     plySpeedMenu.addButton(WHITE, BLUE, BLACK, "Normal")
     plySpeedMenu.addButton(WHITE, BLUE, BLACK, "Fast")
 
+    # Opponent Speed Settings
     oppSpeedMenu = HorizontalMenu(DISPLAY_WIDTH * 0.635, DISPLAY_HEIGHT * 0.4, DISPLAY_WIDTH * 0.7, DISPLAY_HEIGHT * 0.075)
     oppSpeedMenu.addButton(WHITE, BLUE, BLACK, "Slow")
     oppSpeedMenu.addButton(WHITE, BLUE, BLACK, "Normal")
     oppSpeedMenu.addButton(WHITE, BLUE, BLACK, "Fast")
 
+    # Player Color Settings
     plyColorMenu = HorizontalMenu(DISPLAY_WIDTH * 0.635, DISPLAY_HEIGHT * 0.5, DISPLAY_WIDTH * 0.7, DISPLAY_HEIGHT * 0.075)
     plyColorMenu.addButton(WHITE, BLUE, BLACK, "Blue")
     plyColorMenu.addButton(WHITE, BLUE, BLACK, "Orange")
     plyColorMenu.addButton(WHITE, BLUE, BLACK, "Red")
 
+    # Opponent Color Settings
     oppColorMenu = HorizontalMenu(DISPLAY_WIDTH * 0.635, DISPLAY_HEIGHT * 0.6, DISPLAY_WIDTH * 0.7, DISPLAY_HEIGHT * 0.075)
     oppColorMenu.addButton(WHITE, BLUE, BLACK, "Blue")
     oppColorMenu.addButton(WHITE, BLUE, BLACK, "Orange")
     oppColorMenu.addButton(WHITE, BLUE, BLACK, "Red")
 
+    # Time Settings
     timeMenu = HorizontalMenu(DISPLAY_WIDTH * 0.635, DISPLAY_HEIGHT * 0.7, DISPLAY_WIDTH * 0.7, DISPLAY_HEIGHT * 0.075)
     timeMenu.addButton(WHITE, BLUE, BLACK, "30 Secs")
     timeMenu.addButton(WHITE, BLUE, BLACK, "60 Secs")
@@ -178,28 +188,28 @@ def settings():
                     screen()
         
         gameDisplay.fill(BACKGROUND)
-        drawText(gameDisplay, "Settings", None, 100, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.08)
-        drawText(gameDisplay, "Player Controls", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.2, False)
-        drawText(gameDisplay, "Player Speed", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.3, False)
-        drawText(gameDisplay, "Opponent Speed", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.4, False)
-        drawText(gameDisplay, "Player Color", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.5, False)
-        drawText(gameDisplay, "Opponent Color", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.6, False)
-        drawText(gameDisplay, "Time Limit", None, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.7, False)
+        drawText(gameDisplay, "Settings", fontRegular, 90, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.08)
+        drawText(gameDisplay, "Player Controls", fontThin, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.178, False)
+        drawText(gameDisplay, "Player Speed", fontThin, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.278, False)
+        drawText(gameDisplay, "Opponent Speed", fontThin, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.378, False)
+        drawText(gameDisplay, "Player Color", fontThin, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.478, False)
+        drawText(gameDisplay, "Opponent Color", fontThin, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.578, False)
+        drawText(gameDisplay, "Time Limit", fontThin, 28, WHITE, DISPLAY_WIDTH * 0.065, DISPLAY_HEIGHT * 0.678, False)
         
-        for b in btns:
-            b.render(gameDisplay)
+        for btn in btns:
+            btn.render(gameDisplay)
 
         for m in menus:
             m.render(gameDisplay)
 
-        drawText(gameDisplay, "< Click left arrow to return to start menu > ", None, 22, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.9)
+        drawText(gameDisplay, "< Click left arrow to return to start menu >", fontThin, 20, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.9)
         
         pygame.display.update()
         clock.tick(15)
         
 
 # Menu
-menu = VerticalMenu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, DISPLAY_WIDTH * 0.4, DISPLAY_HEIGHT * 0.6, (35, 35, 35))
+menu = VerticalMenu(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.55, DISPLAY_WIDTH * 0.4, DISPLAY_HEIGHT * 0.6, (35, 35, 35))
 
 def toStartMenu():
     menu.buttons.clear()
@@ -218,7 +228,7 @@ menu.addButton(WHITE, GREEN, BLACK, "Settings", settings)
 menu.addButton(WHITE, RED, BLACK, "Quit", quitGame)
 
 def screen():
-    titleFontSize = 180
+    titleFontSize = 140
 
     while True:
         for event in pygame.event.get():
@@ -230,11 +240,11 @@ def screen():
                     toStartMenu()
 
         gameDisplay.fill(BACKGROUND)
-        drawText(gameDisplay, "TRON", None, titleFontSize, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 8)
+        drawText(gameDisplay, "TRON", fontRegular, titleFontSize, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.125)
         menu.render(gameDisplay)
 
         if menu.buttons[0].text == "PvP":
-            drawText(gameDisplay, "< Click left arrow to return to start menu > ", None, 22, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.9)
+            drawText(gameDisplay, "< Click left arrow to return to start menu >", fontThin, 20, WHITE, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT * 0.9)
 
         pygame.display.update()
         clock.tick(15)
