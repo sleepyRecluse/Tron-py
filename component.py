@@ -20,8 +20,10 @@ class Button():
         # Define button and text surfaces
         self.buttonSurface = pygame.Surface((self.width, self.height))
         self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
+
         if centered:
             self.buttonRect.center = ((self.x, self.y))
+
         self.textSurface = self.buttonFont.render(self.text, True, self.textColor)
         
     def render(self, screen):
@@ -50,8 +52,10 @@ class VerticalMenu():
 
         self.buttons = []
         self.surface = pygame.Surface((self.width, self.height))
+
         if self.color != None:
             self.surface.fill(self.color)
+            
         self.rect = self.surface.get_rect()
         self.rect.center = ((self.x, self.y))
 
